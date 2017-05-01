@@ -9,6 +9,9 @@ typedef  bool Status;
 class LinkStack
 {
 public:
+	typedef int ElemType;
+	typedef  bool Status;
+public:
 	struct Node
 	{
 		ElemType m_data;

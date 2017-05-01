@@ -2,6 +2,10 @@
 
 namespace tt
 {
+	void foo()
+	{
+		return;
+	}
 	CirQueue::CirQueue(ElemType INI_SIZE)
 	{
 		assert(INI_SIZE > 0);

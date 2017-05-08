@@ -9,6 +9,8 @@ namespace tt
 		if (!m_data)
 		{
 			cout << "错误！内存分配失败！" << endl;
+			system("pause");
+			exit(0);
 		}
 		m_length = 0;
 		m_maxLength = maxSize;
@@ -18,11 +20,60 @@ namespace tt
 	{
 		this->destroy();
 	}
-	SqList::ElemType SqList::insertAt(ElemType i, ElemType elem) //插入元素，  在线性表中第i个位置之前插入新元素elem
-	{                                               //if(i<0 || i>length)
-		if ((m_length == m_maxLength) || (i<1 || i>m_length + 1))  //当顺序表已满，或插入的位置不合理时，返回错误
+	SqList::ElemType SqList::priorElemAt(ElemType cur_e, ElemType &pri_e)
+	{
+		int i;
+		int *p = m_data;
+
+		for (i = 0; i < m_length; i++, p++) //顺序表长度已知，故用for循环
+		{
+			if ((i == 0) && (*p == cur_e))
+			{
+				return TT_ERROR;
+			}
+			if (*p == cur_e)       //找到了当前元素且不是第一个元素，
+			{
+				pri_e = *--p;      //将其前驱赋给引用参数
+				return TT_OK;
+			}
+		}
+		return TT_ERROR;
+	}
+	SqList::ElemType SqList::nextElemAt(ElemType cur_e, ElemType &Nex_e)
+	{
+		int i = 1;
+		int *p = m_data;
+		while ((i < m_length) && (*p != cur_e))
+		{
+			++i;
+			++p;
+		}
+		if (i == m_length)
 		{
 			return TT_ERROR;
+		}
+		else
+		{
+			Nex_e = *++p;
+			return TT_OK;
+		}
+	}
+	SqList::ElemType SqList::insertAt(ElemType i, ElemType elem) //插入元素，  在线性表中第i个位置之前插入新元素elem
+	{                                               //if(i<0 || i>length)
+		if ((i < 1) || (i>m_length + 1))  //插入的位置不合理时，返回错误
+		{
+			return TT_ERROR;
+		}
+		if ((m_length == m_maxLength))   //表已满
+		{
+			int *allocateMemory = new int[m_data, m_maxLength + LIST_NCREMENT]; // 用allocateMemory指针是为了保护m_data
+			if (!allocateMemory)
+			{
+				cout << "错误！继续分配内存失败！" << endl;
+				system("pause");
+				exit(0);
+			}
+			m_maxLength += LIST_NCREMENT;   //增加存储容量
 		}
 		if (i <= m_length)  //若插入的位置不在表尾，否则直接插入新元素，只有插入第11个位置才算是表尾
 		{
@@ -36,9 +87,10 @@ namespace tt
 	}
 	SqList::ElemType SqList::removeAt(ElemType i, ElemType &elemOut)  //删除元素线性表中第i个数据元素，并用elem返回其值,表长减一
 	{
-		if ((m_length == 0) || (i<1 || i>m_length))/*假如m_length=10,m_maxSize=20;线性表是是第一个位置数，没有第0个位置，
-												   删除的线性表的位置不能大于当前线性表的长度,或者当前没有元素，说白了就是删除位置
-												   不合理*/
+
+		if ((i < 1) || (i > m_length))/*假如m_length=10,m_maxSize=20;线性表是是第一个位置数，没有第0个位置，
+									  删除的线性表的位置不能大于当前线性表的长度,或者当前没有元素，说白了就是删除位置
+									  不合理*/
 		{
 			return TT_ERROR;
 		}
@@ -53,7 +105,7 @@ namespace tt
 	}
 	SqList::ElemType SqList::getAt(ElemType i, ElemType &elemOut) //获得元素的操作,将线性表中第i个位置的元素的值返回给e
 	{
-		if ((m_length == 0) || (i<1 || i>m_length))  //当你获取的元素不在线性表中的范围，就错误呗
+		if ((i<1 )|| (i>m_length))  //当你获取的元素不在线性表中的范围，就错误呗
 		{
 			return TT_ERROR;
 		}
@@ -69,7 +121,7 @@ namespace tt
 									数组下标i-1的位置，返回的时候要加1*/
 				return i + 1;
 		}
-		return TT_OK;
+		return TT_ERROR;
 	}
 
 
@@ -86,6 +138,7 @@ namespace tt
 	}
 	SqList::Status SqList::show()
 	{
+		int *p = m_data;
 		if (m_length == 0)
 		{
 			cout << "错误！当前线性表没有元素，无法显示！" << endl;
@@ -93,9 +146,9 @@ namespace tt
 		else
 		{
 			cout << "输出线性表的所有元素为：";
-			for (int k = 0; k < m_length; ++k)
+			for (int k = 0; k < m_length; ++k, ++p)
 			{
-				cout << m_data[k] << " ";
+				cout << *p << " ";   //data[k] 也是可以的 
 			}
 			cout << endl;
 		}
@@ -126,13 +179,14 @@ void testMySqList()
 				<< "********************   选择3——获取元素.   **********************" << endl
 				<< "********************   选择4——查找元素.   **********************" << endl
 				<< "********************   选择5——是否为空.   **********************" << endl
-				<< "********************   选择6——获取线性表的长度.   **********************" << endl
+				<< "********************   选择6——获取表的长度.   **********************" << endl
 				<< "********************   选择7——清空元素.   **********************" << endl
 				<< "********************   选择8——显示所有元素.   **********************" << endl
-				<< "********************   选择9——是否为满.    **************************" << endl
-				<< "*********************  选择10——销毁线性表.  ************************" << endl
-				<< "**********************  选择11——清屏！      ************************" << endl
-				<< "**********************  选择0——退出程序！   ************************" << endl
+				<< "*********************  选择9——销毁线性表.  ************************" << endl
+				<< "*********************  选择10——获得元素的前驱.  *****************" << endl
+				<< "*********************  选择11——获得元素的后继.  *****************" << endl
+				<< "*******************    选择12——清屏！      ************************" << endl
+				<< "******************     选择0——退出程序！   ************************" << endl
 				<< "***********************************************************************" << endl
 				<< "***********************************************************************" << endl;
 		}
@@ -202,17 +256,17 @@ void testMySqList()
 			int findElem(0);   //查找元素
 			cout << "请输入你想要查找的元素的值：";
 			cin >> findElem;
-			int indexLocition = mySqList.getIndexElem(findElem);
-			if (!indexLocition)
-			{
-				cout << "当前表中无此元素" << endl;
-				mySqList.getLength();
-			}
-			else
+			if (int indexLocition = mySqList.getIndexElem(findElem))
 			{
 				cout << "所要查找的元素位于表中第" << indexLocition << "个位置" << endl;
 				mySqList.getLength();
 				mySqList.show();
+
+			}
+			else
+			{
+				cout << "当前表中无此元素" << endl;
+				mySqList.getLength();
 			}
 			break;
 		}
@@ -242,19 +296,6 @@ void testMySqList()
 			mySqList.getLength();
 			break;
 		case 9:
-			if (mySqList.isFull())
-			{
-				cout << "目前该顺序表为满！不能再增加元素了！" << endl;
-				mySqList.getLength();
-			}
-			else
-			{
-				cout << "目前该顺序表非满，还可以增加元素！" << endl;
-				mySqList.show();
-				mySqList.getLength();
-			}
-			break;
-		case 10:
 		{
 			cout << "你确定要销毁该顺序表吗？(若销毁请输入输入(Y/y))";
 			char yesOrNo;
@@ -270,7 +311,43 @@ void testMySqList()
 			}
 			break;
 		}
+		case 10:
+		{
+			int priorElem(0);
+			int getElem(0);
+			cout << "输入你想要获得哪一个元素的前驱？（注意：不能获取第一个元素的）：";
+			cin >> priorElem;
+			if (mySqList.priorElemAt(priorElem, getElem))
+			{
+				cout << "数据元素" << priorElem << "的，前驱元素是：" << getElem << endl;
+				mySqList.show();
+			}
+			else
+			{
+				cout << "获取前驱元素失败，不能获取第一个元素的前驱或者链表中没有你输入的元素！" << endl;
+				mySqList.show();
+			}
+			break;
+		}
 		case 11:
+		{
+			int backElem(0);
+			int getElem(0);
+			cout << "输入你想要获得哪一个元素的后继？（注意：不能获取最后一个元素的）：";
+			cin >> backElem;
+			if (mySqList.nextElemAt(backElem, getElem))
+			{
+				cout << "数据元素" << backElem << "的，后继元素是：" << getElem << endl;
+				mySqList.show();
+			}
+			else
+			{
+				cout << "获取后继元素失败！不能获取最后一个元素的后继或者链表中没有你输入的元素！" << endl;
+				mySqList.show();
+			}
+			break;
+		}
+		case 12:
 			system("cls");
 			cout << "屏幕已经清屏，可以重新输入!" << "\n" << endl;
 			break;

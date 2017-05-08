@@ -24,7 +24,7 @@ namespace tt
 		{                    //m_heap即所设置的尾指针，p即程序中遍历整个链表的指针。
 			Node *p = new Node;
 			p->m_data = datas[i];
-			//直接将p结点插入在尾结点后成为新的尾结点即可。
+			                       //直接将p结点插入在尾结点后成为新的尾结点即可。
 			p->m_next = m_heap->m_next;
 			m_heap = m_heap->m_next = p;
 		}
@@ -89,19 +89,15 @@ namespace tt
 	CirLinkList::ElemType CirLinkList::insertAt(ElemType i, ElemType elem)
 	{
 		Node *p = m_heap->m_next;    //p指向表头
-		if ((i <= 0))
+		if ((i < 1) || (i > getLength() + 1))   //i位置不合理时，返回false
 		{
 			return TT_ERROR;
 		}
 		int j = 1;
-		while (p && j < i)   //寻找第i-1个结点
+		while (j < i)   //当j小于i时  就继续
 		{
 			p = p->m_next;
 			++j;
-		}
-		if (!p && j > i)
-		{
-			return TT_ERROR;
 		}
 		Node *s = new Node;
 		s->m_data = elem;
@@ -116,23 +112,19 @@ namespace tt
 	CirLinkList::ElemType CirLinkList::removeAt(ElemType i, ElemType &elemOut)
 	{
 		Node *p = m_heap->m_next;   //p指向表头
-		if ((i <= 0))
+		if ((i < 1) || (i > getLength()))   //判断删除位置是否合理
 		{
 			return TT_ERROR;
 		}
 		int j = 1;
-		while ((p->m_next) && (j < i))
+		while (j < i)
 		{
 			p = p->m_next;
 			++j;
 		}
-		if (!(p->m_next) || (j > i))
-		{
-			return TT_ERROR;
-		}
 		Node *q = p->m_next;    //q指向待删除结点 
 		p->m_next = q->m_next;
-		elemOut = q->m_data;
+		elemOut = q->m_data;    //这句放在前面也是可以的，但是需要修改一下判断条件， 放在前面不需要声明一个临时节点q
 		if (m_heap == q) //删除的是表尾元素，表尾指针发生改变
 		{
 			m_heap = p;
@@ -160,20 +152,16 @@ namespace tt
 	{
 		Node *q = m_heap->m_next->m_next;    //让q指向链表的第一个节点
 
-		if (i <= 0)
+		if ((i < 1) || (i > getLength()))
 		{
 			return TT_ERROR;
 		}
-		int j = 1;  //从一个节点开始循环遍历，就是当前位置
-		while (q && j < i)
-		{                       /*当q还没有为空时， 当前的位置已经超过了要查找的位置，直接退出循环*/
+		int j = 1;
+		while ((j < i))
+		{
 
 			q = q->m_next;
 			++j;
-		}
-		if (!q || j < i)   //q还没有指向空，当当前的位置已经超过了要找的位置，但还是没有找到，就返回错误
-		{
-			return TT_ERROR;
 		}
 		elemOut = q->m_data;   //取第i个元素的数据
 		return TT_OK;
@@ -225,13 +213,8 @@ namespace tt
 	}
 	CirLinkList::ElemType CirLinkList::destroy()
 	{
-		Node *p = m_heap->m_next; //p指向头结点
-		while (p != m_heap)
-		{
-			Node *q = p->m_next;
-			delete p;
-			p = q;
-		}
+		this->clear();  //去调用clear()函数，  清空所有元素， 在次函数中，因为只剩下一个m_heap，  所以直接下面直接释放m_heap
+		delete m_heap;
 		m_heap = nullptr;
 		return TT_OK;
 	}
@@ -260,7 +243,7 @@ void testMyCirLinkList()
 	{
 		{
 			cout << "\n*************************************************************" << endl
-				<< "*******************   循环链表的基本功能展示   *******************" << endl
+				<< "*******************   单向循环链表的基本功能展示   *******************" << endl
 				<< "*****************************************************************" << endl
 				<< "********************   选择1——数据插入.   **********************" << endl
 				<< "********************   选择2——数据删除.   **********************" << endl
@@ -271,7 +254,7 @@ void testMyCirLinkList()
 				<< "********************   选择7——清空元素.   **********************" << endl
 				<< "********************   选择8——输出所有元素. ************************" << endl
 				<< "********************   选择9——销毁链表. ************************" << endl
-				<< "*********************   选择10——获得元素的前驱.  *****************" << endl
+				<< "*********************  选择10——获得元素的前驱.  *****************" << endl
 				<< "*********************  选择11——获得元素的后继.  *****************" << endl
 				<< "********************   选择12——清屏！      ************************" << endl
 				<< "********************   选择0——退出程序！   ************************" << endl

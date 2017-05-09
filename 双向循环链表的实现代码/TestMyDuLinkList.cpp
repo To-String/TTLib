@@ -86,7 +86,7 @@ namespace tt
 	DuLinkList::ElemType DuLinkList::getAt(ElemType i, ElemType &elemOut)
 	{
 		DulNode *q = m_heap->m_next;    //让q指向链表的第一个节点
-		if (i > getLength())  // 判断i的位置是否超过链表的长度
+		if ((i < 1) || (i >getLength()))  // 判断i的位置是否超过链表的长度
 		{
 			return TT_ERROR;
 		}

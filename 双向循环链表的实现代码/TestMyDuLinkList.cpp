@@ -364,8 +364,7 @@ void testMyDuLinkList()
 			break;
 		case 6:
 		{                                         //获取长度
-			int temp = MyDuLinkList.getLength();
-			cout << "双向循环链表当前的长度为：" << temp << endl;
+			cout << "双向循环链表当前的长度为：" << MyDuLinkList.getLength() << endl;
 			break;
 		}
 		case 7:

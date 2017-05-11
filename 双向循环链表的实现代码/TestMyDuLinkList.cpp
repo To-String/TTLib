@@ -41,6 +41,7 @@ namespace tt
 			m_heap->m_prior = p;  //那么头结点的前驱变成p，   这样就会形成一个首尾相接的双向循环链表
 			m = p;  //最后把第一个节点变成m，  就这样按以上步骤循环
 		}
+		m->m_next=nullptr； //  表示当前链表创建结束
 	}
 	DuLinkList::ElemType DuLinkList::insertAt(ElemType i, ElemType elem)
 	{

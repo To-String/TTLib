@@ -2,16 +2,15 @@
 #define TT_OK 1
 #define TT_ERROR 0
 using namespace std;
-int quick_Sort(int *arr, int left, int right)
+int quick_Sort( int *const arr, const int left, const int right)
 {
-	
-	if (left <= right)
+	if (left < right)
 	{
 		int i = left, j = right;
 		int temp = arr[left];
 		while (i < j)   //假如进行排序的数只有一个的话，直接跳过
 		{
-			while ((i < j) && (arr[j] >= temp)) // 从右向左找第一个小于x的数  
+			while ((i < j) && (arr[j] >= temp)) // 从右向左找第一个小于temp的数  
 			{
 				--j;
 			}
@@ -20,24 +19,24 @@ int quick_Sort(int *arr, int left, int right)
 				arr[i++] = arr[j];  //把右边第一个比基准数小的数赋值到基准数的位置，然后i往右移动一次
 									//i++
 			}
-			while ((i < j) && (arr[i] < temp)) // 从左向右找第一个大于等于x的数  
+			while ((i < j) && (arr[i] < temp)) // 从左向右找第一个大于等于temp的数  
 			{
 				++i;
 			}
 			if (i < j)
 			{
 				arr[j--] = arr[i];  //把左边第一个比基准数大的数赋值到arr[j]的位置，然后j在往前移动一次
-				//j--
+									//j--
 			}
 		}
 		arr[i] = temp; //把基准数放到中间去，小的在左边，大的在右边
 		quick_Sort(arr, left, i - 1);  //先对基准点左边的数进行快速排序， i-1这样，就变成基准数左边的那个数，基准数还是第一个数
-		quick_Sort(arr, j + 1, right); //再对基准点右边的数进行排序  i+1,就是基准数右边的那个数，那么那个数就是右边递归的基准数
-		                             //那么j还是从最右边往最左边找比基准数小的数，i还是同样还是从左边开始往右找比基准数大的数
+		quick_Sort(arr, j + 1, right); //再对基准点右边的数进行排序  j+1,就是基准数右边的那个数，那么那个数就是右边递归的基准数第一个数
+									   //那么j还是从最右边往最左边找比基准数小的数，i还是同样还是从左边开始往右找比基准数大的数
 	}
 	return TT_OK;
 }
-void print_Array(int arr[], int count)
+void print_Array(const int *const arr, const int count)
 {
 	cout << "\n输出排序前的数据元素：\n";
 	for (int j = 0; j < count; ++j)
@@ -72,12 +71,11 @@ int main()
 		{
 			int arrLength(0);
 			cout << "请输入你想添加多少个元素进行快速排序：";
-			cin >> arrLength;
-			if (arrLength <= 0)
+			
+			if ((cin >> arrLength) && (arrLength <= 0))
 			{
-				cout << "输入错误，请输入正确的数组个数(至少大于0)，否则无法进行排序！" << endl;
-				system("pause");
-				exit(0);
+				cout << "输入错误，请输入正确的数组个数(至少大于0)，否则无法进行排序,请重新输入！" << endl;
+				continue;
 			}
 			int *assignCapacityElem = new int[arrLength];
 			if (!assignCapacityElem)

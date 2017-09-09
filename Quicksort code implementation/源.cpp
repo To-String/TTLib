@@ -8,9 +8,9 @@ void swap(int &x, int &y)
 	x = y;
 	y = temp;
 }
-int quickSort(int *arr, int left, int right)
+int quickSort( int *arr,const int left, const int right)
 {
-	if (left <= right)
+	if (left < right)
 	{
 		int i = left;
 		int j = right;
@@ -44,12 +44,12 @@ int quickSort(int *arr, int left, int right)
 	}
 	return TT_OK;
 }
-void printArray(int arr[],int count)
+void printArray(const int *const arr, const int count)
 {
-	cout << "输出未排序前数组中的元素：\n";
-	for (int i = 0; i < count; ++i)
+	cout << "\n输出排序前的数据元素：\n";
+	for (int j = 0; j < count; ++j)
 	{
-		cout << arr[i] << " ";
+		cout << arr[j] << " ";
 	}
 }
 
@@ -78,12 +78,11 @@ int main()
 		case 1:
 			int arraySize(0);
 			cout << "请输入你想要排序的数组的个数：";
-			cin >> arraySize;
-			if (arraySize <= 0)
+		
+			if ((cin >> arraySize) && (arraySize <= 0))
 			{
-				cout << "输入错误，请输入正确的数组个数(至少大于0)，否则无法进行排序！" << endl;
-				system("pause");
-				exit(0);
+				cout << "输入错误，请输入正确的数组个数(至少大于0)，否则无法进行排序,请重新输入！" << endl;
+				continue;
 			}
 			int *assignCapacity = new int[arraySize];
 			if (!assignCapacity)

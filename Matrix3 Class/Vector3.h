@@ -16,8 +16,7 @@ public:
 	}
 	void print_v()
 	{
-		
-		cout << "\n输出结果为：" << "[" << m_x << ", " << m_y << ", " << m_z << "]" << "\n" << endl;
+		cout << "\n输出结果为：" << " [ " << ((abs(m_x) < 0.00001) ? 0 : m_x) << ", " << ((abs(m_y) < 0.00001) ? 0 : m_y) << ", " << ((abs(m_z) < 0.00001) ? 0 : m_z) << " ] " << "\n" << endl;
 	}
 	Vector3 &operator=(const Vector3 &a);
 	bool operator==(const Vector3 &a)const;
@@ -162,5 +161,4 @@ float distance(const Vector3 &a, const Vector3 &b)  //计算两点间的距离
 	float dz = a.m_z - b.m_z;
 	return sqrt(dx * dx + dy * dy + dz * dz);
 }
-
 #endif
